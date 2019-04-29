@@ -8,8 +8,8 @@
 
 #import "CZNavigationViewGenerator.h"
 #import <CZConfig/CZConfig.h>
-#import <CZCategory/NSString+CZCategory.h>
-#import <CZCategory/UIView+CZCategory.h>
+#import <CZCategorys/NSString+CZCategory.h>
+#import <CZCategorys/UIView+CZCategory.h>
 
 @interface CZNavigationViewGenerator ()
 
@@ -62,15 +62,34 @@
     generator.textFont = [UIFont systemFontOfSize:12];
     generator.textColor = [UIColor redColor];
     generator.generatorType = CZNavigationViewGeneratorTypeLeft;
-    generator.contentSpace = 5;
+    generator.contentSpace = 0;
     generator.containerHeight = 44;
     generator.imageTextSpace = 2;
     return generator;
 }
 
++(CGFloat)getNaviSpace
+{
+    static CGFloat space = 15;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString * bundlePath = [[NSBundle mainBundle] pathForResource:@"CZConfig" ofType:@"plist"];
+        if (bundlePath.length) {
+            NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
+            space = [dic[@"naviSpace"] floatValue];
+        }
+    });
+    return space;
+}
+
 -(void)generateWithVC:(UIViewController *)vc action:(SEL)clickAction
 {
-    [self createCustomView:vc action:clickAction];
+    [self createCustomView:vc action:clickAction customView:nil];
+}
+
+-(void)generateWithCustomView:(UIView *)view vc:(UIViewController *)vc action:(SEL)clickAction
+{
+    [self createCustomView:vc action:clickAction customView:view];
 }
 
 #pragma mark DSL
@@ -145,47 +164,51 @@
  @param vc 当前VC
  @param clickAction 响应事件
  */
--(void)createCustomView:(UIViewController *)vc action:(SEL)clickAction
+-(void)createCustomView:(UIViewController *)vc action:(SEL)clickAction customView:(UIView *)customView
 {
-    UIView * view = [[UIView alloc] init];
-    // 添加点击事件
-    if (clickAction) [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:vc action:clickAction]];
-    CGSize textSize = CGSizeZero;
-    CGSize imgSize = CGSizeZero;
-    UILabel * label = nil;
-    UIImageView * imgView = nil;
-    if (self.textTitle.length) {
-        label = [[UILabel alloc] init];
-        label.font = self.textFont;
-        label.text = self.textTitle;
-        label.textColor = self.textColor;
-        label.textAlignment = NSTextAlignmentCenter;
-        textSize = [self.textTitle getTextActualSize:self.textFont lines:0 maxWidth:[UIScreen mainScreen].bounds.size.width];
-        [view addSubview:label];
+    if (customView) {
+        [self evaluateBarItem:vc view:customView];
+    } else {
+        UIView * view = [[UIView alloc] init];
+        // 添加点击事件
+        if (clickAction) [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:vc action:clickAction]];
+        CGSize textSize = CGSizeZero;
+        CGSize imgSize = CGSizeZero;
+        UILabel * label = nil;
+        UIImageView * imgView = nil;
+        if (self.textTitle.length) {
+            label = [[UILabel alloc] init];
+            label.font = self.textFont;
+            label.text = self.textTitle;
+            label.textColor = self.textColor;
+            label.textAlignment = NSTextAlignmentCenter;
+            textSize = [self.textTitle getTextActualSize:self.textFont lines:0 maxWidth:[UIScreen mainScreen].bounds.size.width];
+            [view addSubview:label];
+        }
+        if (self.imageName.length) {
+            imgView = [[UIImageView alloc] init];
+            UIImage * image = [UIImage imageNamed:self.imageName];
+            imgView.image = image;
+            imgSize = image.size;
+            [view addSubview:imgView];
+        }
+        
+        // 赋值坐标
+        if (self.imageName.length && self.textTitle.length) {
+            CGFloat maxWidth = MAX(imgSize.width, textSize.width);
+            CGFloat allHeight = imgSize.height + self.imageTextSpace + textSize.height;
+            view.frame = CGRectMake(0, 0, maxWidth + self.contentSpace*2, self.containerHeight);
+            imgView.frame = CGRectMake((view.width - imgSize.width)/2, (self.containerHeight - allHeight)/2, imgSize.width, imgSize.height);
+            label.frame = CGRectMake((view.width - textSize.width)/2, imgView.yPlushHeight + self.imageTextSpace, textSize.width, textSize.height);
+        } else if (self.imageName.length) {
+            view.frame = CGRectMake(0, 0, imgSize.width + self.contentSpace*2, self.containerHeight);
+            imgView.frame = CGRectMake(self.contentSpace, (view.height - imgSize.height)/2, imgSize.width, imgSize.height);
+        } else if (self.textTitle.length) {
+            view.frame = CGRectMake(0, 0, textSize.width + self.contentSpace*2, self.containerHeight);
+            label.frame = view.bounds;
+        }
+        [self evaluateBarItem:vc view:view];
     }
-    if (self.imageName.length) {
-        imgView = [[UIImageView alloc] init];
-        UIImage * image = [UIImage imageNamed:self.imageName];
-        imgView.image = image;
-        imgSize = image.size;
-        [view addSubview:imgView];
-    }
-    
-    // 赋值坐标
-    if (self.imageName.length && self.textTitle.length) {
-        CGFloat maxWidth = MAX(imgSize.width, textSize.width);
-        CGFloat allHeight = imgSize.height + self.imageTextSpace + textSize.height;
-        view.frame = CGRectMake(0, 0, maxWidth + self.contentSpace*2, self.containerHeight);
-        imgView.frame = CGRectMake((view.width - imgSize.width)/2, (self.containerHeight - allHeight)/2, imgSize.width, imgSize.height);
-        label.frame = CGRectMake((view.width - textSize.width)/2, imgView.yPlushHeight + self.imageTextSpace, textSize.width, textSize.height);
-    } else if (self.imageName.length) {
-        view.frame = CGRectMake(0, 0, imgSize.width + self.contentSpace*2, self.containerHeight);
-        imgView.frame = CGRectMake(self.contentSpace, (view.height - imgSize.height)/2, imgSize.width, imgSize.height);
-    } else if (self.textTitle.length) {
-        view.frame = CGRectMake(0, 0, textSize.width + self.contentSpace*2, self.containerHeight);
-        label.frame = view.bounds;
-    }
-    [self evaluateBarItem:vc view:view];
 }
 
 
@@ -198,6 +221,15 @@
         case CZNavigationViewGeneratorTypeLeft:
         {
             NSMutableArray * items = [NSMutableArray arrayWithArray:vc.navigationItem.leftBarButtonItems];
+            
+            // 添加间隔bar
+            if (!(kiOS11_or_Later) && items.count <= 0) {
+                CGFloat space = [[self class] getNaviSpace];
+                UIBarButtonItem * negativeSeperator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+                negativeSeperator.width = space - 16;
+                [items addObject:negativeSeperator];
+            }
+            
             [items addObject:[[UIBarButtonItem alloc] initWithCustomView:view]];
             vc.navigationItem.leftBarButtonItems = items;
         }
@@ -205,6 +237,15 @@
         case CZNavigationViewGeneratorTypeRight:
         {
             NSMutableArray * items = [NSMutableArray arrayWithArray:vc.navigationItem.rightBarButtonItems];
+            
+            // 添加间隔bar
+            if (!(kiOS11_or_Later) && items.count <= 0) {
+                CGFloat space = [[self class] getNaviSpace];
+                UIBarButtonItem * negativeSeperator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+                negativeSeperator.width = space - 16;
+                [items addObject:negativeSeperator];
+            }
+            
             [items addObject:[[UIBarButtonItem alloc] initWithCustomView:view]];
             vc.navigationItem.rightBarButtonItems = items;
         }

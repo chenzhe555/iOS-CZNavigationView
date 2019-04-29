@@ -14,7 +14,7 @@
 		94BD937922732567005DDDAA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94BD937722732567005DDDAA /* LaunchScreen.storyboard */; };
 		94BD937C22732567005DDDAA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BD937B22732567005DDDAA /* main.m */; };
 		94BD938522733296005DDDAA /* CZNavigationViewGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BD938422733296005DDDAA /* CZNavigationViewGenerator.m */; };
-		94BD938822733400005DDDAA /* CZNavigationItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BD938722733400005DDDAA /* CZNavigationItemView.m */; };
+		94BD938B22736BBA005DDDAA /* UINavigationBar+Space.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BD938A22736BBA005DDDAA /* UINavigationBar+Space.m */; };
 		987D39274FF7EED458F6D3FA /* libPods-CZNavigationView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21170F9D9481E9F12F74FB5D /* libPods-CZNavigationView.a */; };
 /* End PBXBuildFile section */
 
@@ -33,8 +33,8 @@
 		94BD937B22732567005DDDAA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		94BD938322733296005DDDAA /* CZNavigationViewGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CZNavigationViewGenerator.h; sourceTree = "<group>"; };
 		94BD938422733296005DDDAA /* CZNavigationViewGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CZNavigationViewGenerator.m; sourceTree = "<group>"; };
-		94BD938622733400005DDDAA /* CZNavigationItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CZNavigationItemView.h; sourceTree = "<group>"; };
-		94BD938722733400005DDDAA /* CZNavigationItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CZNavigationItemView.m; sourceTree = "<group>"; };
+		94BD938922736BBA005DDDAA /* UINavigationBar+Space.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+Space.h"; sourceTree = "<group>"; };
+		94BD938A22736BBA005DDDAA /* UINavigationBar+Space.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Space.m"; sourceTree = "<group>"; };
 		BABA635BEE8CF681F587F550 /* Pods-CZNavigationView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CZNavigationView.release.xcconfig"; path = "Pods/Target Support Files/Pods-CZNavigationView/Pods-CZNavigationView.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,8 +107,8 @@
 			children = (
 				94BD938322733296005DDDAA /* CZNavigationViewGenerator.h */,
 				94BD938422733296005DDDAA /* CZNavigationViewGenerator.m */,
-				94BD938622733400005DDDAA /* CZNavigationItemView.h */,
-				94BD938722733400005DDDAA /* CZNavigationItemView.m */,
+				94BD938922736BBA005DDDAA /* UINavigationBar+Space.h */,
+				94BD938A22736BBA005DDDAA /* UINavigationBar+Space.m */,
 			);
 			path = classes;
 			sourceTree = "<group>";
@@ -205,11 +205,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94BD938822733400005DDDAA /* CZNavigationItemView.m in Sources */,
 				94BD937122732565005DDDAA /* ViewController.m in Sources */,
 				94BD938522733296005DDDAA /* CZNavigationViewGenerator.m in Sources */,
 				94BD937C22732567005DDDAA /* main.m in Sources */,
 				94BD936E22732565005DDDAA /* AppDelegate.m in Sources */,
+				94BD938B22736BBA005DDDAA /* UINavigationBar+Space.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

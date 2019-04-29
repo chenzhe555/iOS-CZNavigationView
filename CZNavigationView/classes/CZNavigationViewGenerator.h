@@ -25,10 +25,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  @brief 生成NavigationView
+
+ @param vc 当前VC
+ @param clickAction 点击事件
  */
 -(void)generateWithVC:(UIViewController *)vc action:(SEL _Nullable)clickAction;
 
+/**
+ @brief 自定义视图生成NavigationView
 
+ @param view 自定义视图
+ @param vc 当前VC
+ @param clickAction 点击事件
+ */
+-(void)generateWithCustomView:(UIView *)view vc:(UIViewController *)vc action:(SEL _Nullable)clickAction;
 
 #pragma mark DSL创建组件相关方法
 
@@ -38,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(CZNavigationViewGenerator *(^)(CZNavigationViewGeneratorType))type;
 
 /**
- @brief 为了扩充点击区域增加的左右间隙, 默认5
+ @brief 为了扩充点击区域增加的左右间隙, 默认0
  */
 -(CZNavigationViewGenerator *(^)(CGFloat))cSpace;
 
